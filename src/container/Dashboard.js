@@ -28,7 +28,7 @@ class Dashboard extends Component {
 
   {/* Left Tool Bar */}
        <LeftToolBar />
-  {/* Main Part */}
+  {/* Work Place */}
           <Body />
   {/* RightToolBar */}
         <RightInformBar />
