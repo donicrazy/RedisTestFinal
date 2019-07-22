@@ -2,6 +2,8 @@ export const START_DRAW = 'START_DRAW';
 export const END_DRAW = 'END_DRAW';
 export const SELECT_RECT = 'SELECT_RECT';
 export const UPDATE_RECT = 'UPDATE_RECT';
+export const VISIBLE_RECT = 'VISIBLE_RECT';
+
 export function startDraw() {
    return{
        type: START_DRAW
@@ -28,4 +30,11 @@ export function updateRect(number, updatePos) {
         type: UPDATE_RECT,
         payload: {number, updatePos},
     }
-} 
+}
+
+export function visibleRect(number) {
+    return {
+        type: VISIBLE_RECT,
+        payload: number,
+    }
+}

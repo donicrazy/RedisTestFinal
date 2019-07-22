@@ -5,6 +5,8 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { endDraw, updateRect } from '../redux/action';
 import Graph from '../components/Graph';
+import * as d3 from "d3";
+
 class Body extends Component {
     constructor(props) {
         super(props);
@@ -14,6 +16,14 @@ class Body extends Component {
             sizeControl: null,
             moveOffset: null,
         }
+    }
+    componentWillReceiveProps(nextProps) {
+        nextProps.visibleNums.length > 0 && nextProps.visibleNums.map((val, index) =>{
+            if ( val == 0 )
+                d3.select(`#g${index}`).attr('visibility', 'visible');
+            else
+            d3.select(`#g${index}`).attr('visibility', 'hidden');
+        })
     }
     validatePos = (positions) => {
         var leftTopX = Math.min(positions[0].x, positions[1].x, positions[2].x, positions[3].x);
@@ -66,6 +76,7 @@ const mapStateToProps = state => ({
     startFlag : state.startFlag,
     listPoints : state.listPoints,
     selectedNum : state.selectedNum,
+    visibleNums : state.visible,
 })
 const mapDispatchToProps = {
     endDraw,

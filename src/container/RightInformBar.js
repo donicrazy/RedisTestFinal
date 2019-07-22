@@ -9,11 +9,13 @@ import InboxIcon from '@material-ui/icons/MoveToInbox';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import StarBorder from '@material-ui/icons/StarBorder';
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import { withStyles } from '@material-ui/core';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 
-import { selectRect } from '../redux/action';
+import { selectRect, visibleRect } from '../redux/action';
 const useStyles = theme => ({
   root: {
     width: '100%',
@@ -32,6 +34,7 @@ class RightInformBar extends Component {
 
       this.state = {
           open: true,
+          visibleNums: [],
       }
   }
 
@@ -44,9 +47,17 @@ class RightInformBar extends Component {
   handleObjClick = (index) => (e) => {
     this.props.selectRect(index);
   }
+  handleVisible = (index) => (e) => {
+    this.props.visibleRect(index);
+  }
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      visibleNums: nextProps.visible
+    })
+  }
   render() {
     const { classes, listPoints, pointCount } = this.props;
-    const { open } = this.state;
+    const { open, visibleNums } = this.state;
     return (
         <List
         component="nav"
@@ -70,11 +81,11 @@ class RightInformBar extends Component {
             <List component="div" disablePadding>
                 {
                     listPoints.length > 0 && listPoints.map((points, index) => (
-                        <ListItem button className={classes.nested} key={index} onClick={this.handleObjClick(index)}>
-                            <ListItemIcon>
-                            <StarBorder />
+                        <ListItem className={classes.nested} key={index}>
+                            <ListItemIcon button onClick={this.handleVisible(index)}>
+                            { visibleNums[index] === 0 ? <Visibility /> : <VisibilityOff/> }
                             </ListItemIcon>
-                            <ListItemText primary={`OBJ ${index}`} />
+                            <ListItemText button  primary={`OBJ ${index}`} onClick={this.handleObjClick(index)}/>
                         </ListItem>
                     ))
                 }
@@ -87,9 +98,11 @@ class RightInformBar extends Component {
 const mapStateToProps = state => ({
     listPoints : state.listPoints,
     pointCount : state.objNumber,
+    visible : state.visible,
 })
 const mapDispatchToProps = {
-    selectRect
+    selectRect,
+    visibleRect
 }
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 export default withStyles(useStyles, {withTheme: true})(compose(withConnect)(RightInformBar));
